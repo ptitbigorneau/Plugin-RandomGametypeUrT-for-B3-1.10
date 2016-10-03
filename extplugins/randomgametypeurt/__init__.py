@@ -18,7 +18,7 @@
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA
 
 __author__  = 'PtitBigorneau www.ptitbigorneau.fr'
-__version__ = '1.1'
+__version__ = '1.2'
 
 import b3
 import b3.plugin
@@ -46,16 +46,28 @@ class RandomgametypeurtPlugin(b3.plugin.Plugin):
         'bomb':[8,'Bombmode'],
         'jump':[9,'Jump'],
         'ft':[10,'Freeze Tag'],
-        'gg':[11,'GunGame']
+        'gg':[11,'GunGame'],
+        'ffaim':[0,'FreeForAll Instagib'],
+        'lmsim':[1,'LastManStanding Instagib'],
+        'tdmim':[3,'TeamDeathMatch Instagib'],
+        'tsim':[4,'Team Survivor Instagib'],
+        'ftlim':[5,'Follow the Leader Instagib'],
+        'cahim':[6,'Capture and Hold  Instagib'],
+        'ctfim':[7,'Capture The Flag Instagib'],
+        'bombim':[8,'Bombmode Instagib']
     }
-	
+    _listinstagib = ['ffaim', 'lmsim', 'tdmim', 'tsim', 'ftlim', 'cahim', 'ctfim', 'bombim']
+    
     def onLoadConfig(self):
 
         self._gametypes = self.getSetting('settings', 'gametypes', b3.STRING, self._gametypes)
         self._swaproleson = self.getSetting('settings', 'swaproleson', b3.STRING, self._swaproleson).split(' ')
         self._rgonoff = self.getSetting('settings', 'pluginactived', b3.BOOLEAN, self._rgonoff)
-
+            
     def onStartup(self):
+    
+        if self.console.gameName not in ('iourt41', 'iourt42', 'iourt43'):
+            raise AssertionError("RandomGameTypeUrT plugin can only work with Urban Terror")
 
         self._adminPlugin = self.console.getPlugin('admin')
         
@@ -154,6 +166,16 @@ class RandomgametypeurtPlugin(b3.plugin.Plugin):
         else:
 
             self.console.write("g_swaproles 0")
+    
+        if self.console.gameName == 'iourt43':    
+
+            if self.nextgametype in self._listinstagib:
+             
+                self.console.write("g_instagib 1")
+                
+            else:
+
+                self.console.write("g_instagib 0")   
     
     def grandom(self):
 
